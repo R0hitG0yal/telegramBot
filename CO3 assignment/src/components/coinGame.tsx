@@ -1,5 +1,5 @@
 import gsap from "gsap";
-import React, { useState } from "react";
+import { useState } from "react";
 
 function CoinTapperGame() {
   const [coinBalance, setCoinBalance] = useState(0);

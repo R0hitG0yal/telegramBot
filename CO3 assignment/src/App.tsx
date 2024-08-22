@@ -1,5 +1,5 @@
 // import "./App.css";
-// import CoinTapperGame from "./components/coinGame.tsx";
+import CoinTapperGame from "./components/coinGame.tsx";
 
 // function App() {
 //   return (
@@ -25,9 +25,12 @@ const App: React.FC = () => {
   const userId = 1; // Replace with actual user ID from Telegram
 
   return (
-    <ApolloProvider client={client}>
-      <TapButton userId={userId} />
-    </ApolloProvider>
+    <>
+      <ApolloProvider client={client}>
+        <TapButton userId={userId} />
+      </ApolloProvider>
+      <CoinTapperGame></CoinTapperGame>
+    </>
   );
 };
 
