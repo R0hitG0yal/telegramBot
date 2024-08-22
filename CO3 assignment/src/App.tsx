@@ -1,5 +1,4 @@
 // import "./App.css";
-import CoinTapperGame from "./components/coinGame.tsx";
 
 // function App() {
 //   return (
@@ -29,7 +28,6 @@ const App: React.FC = () => {
       <ApolloProvider client={client}>
         <TapButton userId={userId} />
       </ApolloProvider>
-      <CoinTapperGame></CoinTapperGame>
     </>
   );
 };
