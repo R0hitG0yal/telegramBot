@@ -1,8 +1,9 @@
+import express from "express";
 import TelegramBot from "node-telegram-bot-api";
 import { createClient } from "@supabase/supabase-js";
 
 // Initialize the Telegram bot with your bot token
-const bot = new TelegramBot("7306798431:AAFMnaoH1L_e6rGUC6bLcflcmEq1Qsc2mRQ", {
+const bot = new TelegramBot("7531375147:AAGOkLHfAMeHNnXCR-UC8fR4YlJ_7bgNOro", {
   polling: true,
 });
 
@@ -11,6 +12,13 @@ const supabase = createClient(
   "https://hvvnierfjwymrcwuxyyk.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2dm5pZXJmand5bXJjd3V4eXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjQyOTU0NjcsImV4cCI6MjAzOTg3MTQ2N30.omdvdPlNIjUCujbCCXvG0gWEE-7qhopaHSXHmNMmTVc"
 );
+
+// Initialize Express app
+const app = express();
+const port = 4000; // Your desired port
+
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
 // Handle the /start command
 bot.onText(/\/start/, async (msg) => {
@@ -32,8 +40,7 @@ bot.onText(/\/start/, async (msg) => {
     return bot.sendMessage(chatId, "Error creating user. Please try again.");
   }
 
-  const webAppUrl =
-    "https://telegram-7dp7ab3zb-rohit-s-projects-49622701.vercel.app/";
+  const webAppUrl = "https://telegram-bot-seven-chi.vercel.app/";
   const keyboard = {
     inline_keyboard: [
       [
@@ -52,6 +59,15 @@ bot.onText(/\/start/, async (msg) => {
       reply_markup: { inline_keyboard: keyboard.inline_keyboard },
     }
   );
+
+  // Send user ID to the frontend via API
+  await fetch("http://localhost:4000/api/user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId }),
+  });
 });
 
 // Handle other commands or messages as needed
@@ -65,4 +81,14 @@ bot.on("polling_error", (error) => {
   console.error("Polling error:", error.message);
 });
 
-// ----------------------------------------------------------------
+// API endpoint to receive user ID from Telegram bot
+app.post("/api/user", (req, res) => {
+  const { userId } = req.body;
+  console.log("Received user ID from Telegram bot:", userId);
+  // You can store the user ID or perform any other necessary actions here
+  res.sendStatus(200);
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
