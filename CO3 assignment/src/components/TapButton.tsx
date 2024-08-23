@@ -28,14 +28,13 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
   });
   const [updateCoinBalance] = useMutation(UPDATE_COIN_BALANCE);
 
-  const [coins, setCoins] = useState(0);
-  const [level, setLevel] = useState("");
-
-  useEffect(() => {
+  const [coins, setCoins] = useState(() => {
     if (data && data.getUser) {
-      setCoins(data.getUser.coin_balance);
+      return data.getUser.coin_balance;
     }
-  }, [data]);
+    return 0;
+  });
+  const [level, setLevel] = useState("");
 
   useEffect(() => {
     const levelNames = [
