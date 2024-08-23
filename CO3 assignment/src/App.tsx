@@ -16,7 +16,7 @@ const App: React.FC = () => {
     const fetchUserId = async () => {
       try {
         // Fetch the user ID from your API
-        const response = await axios.get("http://localhost:5000/api/user"); // Ensure this URL matches your Express server
+        const response = await axios.get("http://localhost:3000/api/user"); // Ensure this URL matches your Express server
         setUserId(response.data.userId); // Assuming the response has a userId property
       } catch (error) {
         console.error("Error fetching user ID:", error);
