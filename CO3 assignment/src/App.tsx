@@ -12,12 +12,12 @@ const client = new ApolloClient({
 
 
 const App: React.FC = () => {
-  const [userId, setUserId] = useState(0); // Replace with actual user ID from Telegram
+  const [userId, setUserId] = useState(1); // Replace with actual user ID from Telegram
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/user");
+        const response = await axios.get("http://localhost:3000/api/user");
         setUserId(response.data.userId);
       } catch (error) {
         console.error("Error fetching user ID:", error);

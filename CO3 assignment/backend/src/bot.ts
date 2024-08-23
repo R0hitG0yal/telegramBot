@@ -15,7 +15,7 @@ const supabase = createClient(
 
 // Initialize Express app
 const app = express();
-const port = 5000; // Your desired port
+const port = 3000; // Your desired port
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
@@ -29,6 +29,10 @@ bot.onText(/\/start/, async (msg) => {
     return bot.sendMessage(chatId, "Unable to identify the user.");
   }
   console.log(`id: ${userId}`);
+
+  app.get("/api/user", (req, res) => {
+    res.send(userId);
+  });
 
   // Insert or update user in Supabase
   const { data, error } = await supabase
@@ -60,14 +64,14 @@ bot.onText(/\/start/, async (msg) => {
     }
   );
 
-  // Send user ID to the frontend via API
-  await fetch("http://localhost:4000/api/user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ userId }),
-  });
+  // // Send user ID to the frontend via API
+  // await fetch("http://localhost:4000/api/user", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ userId }),
+  // });
 });
 
 // Handle other commands or messages as needed
@@ -79,14 +83,6 @@ bot.onText(/\/help/, (msg) => {
 // Handle errors globally
 bot.on("polling_error", (error) => {
   console.error("Polling error:", error.message);
-});
-
-// API endpoint to receive user ID from Telegram bot
-app.post("/api/user", (req, res) => {
-  const { userId } = req.body;
-  console.log("Received user ID from Telegram bot:", userId);
-  // You can store the user ID or perform any other necessary actions here
-  res.sendStatus(200);
 });
 
 app.listen(port, () => {
