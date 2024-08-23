@@ -23,9 +23,10 @@ const UPDATE_COIN_BALANCE = gql`
 `;
 
 const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
-  const { data, loading, error, refetch } = useQuery(GET_USER, {
+  const { data, loading, error } = useQuery(GET_USER, {
     variables: { userId },
   });
+  const [updateCoinBalance] = useMutation(UPDATE_COIN_BALANCE);
 
   const [coins, setCoins] = useState(0);
   const [level, setLevel] = useState("");
@@ -35,8 +36,6 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
       setCoins(data.getUser.coin_balance);
     }
   }, [data]);
-
-  const [updateCoinBalance] = useMutation(UPDATE_COIN_BALANCE);
 
   useEffect(() => {
     const levelNames = [
@@ -66,7 +65,11 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
     for (let i = 0; i < levelMinPoints.length - 1; i++) {
       if (coins >= levelMinPoints[i] && coins < levelMinPoints[i + 1]) {
         setLevel(levelNames[i]);
-      } else if (coins >= 1000000000) setLevel("Lord");
+        break; // Exit loop once the correct level is found
+      } else if (coins >= 1000000000) {
+        setLevel("Lord");
+        break; // Exit loop once the correct level is found
+      }
     }
   }, [coins]);
 
@@ -76,9 +79,8 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
       await updateCoinBalance({
         variables: { id: userId, coin_balance: newBalance },
       });
-      refetch(); // Refetch the user data after the mutation is completed
     }, 500), // 500 ms debounce
-    [userId, updateCoinBalance, refetch]
+    [userId, updateCoinBalance]
   );
 
   const handleTap = () => {
@@ -91,33 +93,28 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <>
-      <div className="tap-container mx-auto rounded-lg">
-        <div className="text-4xl font-serif underline underline-offset-4 decoration-indigo-500">
-          {level}
-        </div>
-        <h1 className="mt-2 font-serif tracking-wider text-4xl mb-8">
-          Coins:{coins}
-        </h1>
-        {/* <button className="tap-button" onClick={handleTap}>
-          <CoinLogo />
-        </button> */}
-        <div className="px-4 mt-4 flex justify-center">
-          <div
-            className="w-80 h-80 p-4 rounded-full circle-outer"
-            onClick={handleTap}
-          >
-            <div className="w-full h-full rounded-full circle-inner">
-              <img
-                src={mainCharacter}
-                alt="Main Character"
-                className="w-full h-full"
-              />
-            </div>
+    <div className="tap-container mx-auto rounded-lg">
+      <div className="text-4xl font-serif underline underline-offset-4 decoration-indigo-500">
+        {level}
+      </div>
+      <h1 className="mt-2 font-serif tracking-wider text-4xl mb-8">
+        Coins: {coins}
+      </h1>
+      <div className="px-4 mt-4 flex justify-center">
+        <div
+          className="w-80 h-80 p-4 rounded-full circle-outer"
+          onClick={handleTap}
+        >
+          <div className="w-full h-full rounded-full circle-inner">
+            <img
+              src={mainCharacter}
+              alt="Main Character"
+              className="w-full h-full"
+            />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
