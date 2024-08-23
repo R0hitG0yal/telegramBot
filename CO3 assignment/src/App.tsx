@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import TapButton from "./components/TapButton";
 import axios from "axios";
@@ -12,12 +12,12 @@ const client = new ApolloClient({
 const App: React.FC = () => {
   const [userId, setUserId] = useState<number | null>(null); // Initialize userId as null
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchUserId = async () => {
       try {
         // Fetch the user ID from your API
         const response = await axios.get("http://localhost:3000/api/user"); // Ensure this URL matches your Express server
-        setUserId(response.data.userId); // Assuming the response has a userId property
+        console.log(response.data.userId); // Assuming the response has a userId property
       } catch (error) {
         console.error("Error fetching user ID:", error);
       }
