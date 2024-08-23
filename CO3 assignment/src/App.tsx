@@ -24,11 +24,13 @@ const App: React.FC = () => {
   const userId = 1; // Replace with actual user ID from Telegram
 
   return (
-    <>
-      <ApolloProvider client={client}>
-        <TapButton userId={userId} />
-      </ApolloProvider>
-    </>
+    <div className="w-full h-screen bg-gradient-to-br from-purple-900 to-black text-white p-4">
+      <div>
+        <ApolloProvider client={client}>
+          <TapButton userId={userId} />
+        </ApolloProvider>
+      </div>
+    </div>
   );
 };
 

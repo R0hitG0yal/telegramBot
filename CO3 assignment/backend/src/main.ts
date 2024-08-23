@@ -15,7 +15,7 @@ const typeDefs = /* GraphQL */ `
   }
 
   type Mutation {
-    incrementCoins(userId: Int!): User
+    updateCoinBalance(id: Int!, coin_balance: Int!): User
   }
 `;
 
@@ -38,75 +38,35 @@ const resolvers = {
     },
   },
   Mutation: {
-    // addUser: async (
-    //   parent: any,
-    //   args: { id: number; coin_balance: number }
-    // ) => {
-    //   const { data, error } = await supabase
-    //     .from("users")
-    //     .insert([
-    //       { id: args.id, coin_balance: args.coin_balance },
-    //     ])
-    //     .select()
-    //     .single();
+    updateCoinBalance: async (
+      parent: any,
+      args: { id: number; coin_balance: number }
+    ) => {
+      console.log(
+        "updateCoinBalance called with id:",
+        args.id,
+        "coin_balance:",
+        args.coin_balance
+      );
 
-    //   if (error) {
-    //     throw new Error(error.message);
-    //   }
-    //   return data;
-    // },
-    incrementCoins: async (_: any, { userId }: { userId: number }) => {
-      // Get the current coin balance
-      const { data: user, error: fetchError } = await supabase
-        .from("userschema")
-        .select("coin_balance")
-        .eq("id", userId)
-        .single();
-
-      if (fetchError || !user) {
-        throw new Error("User not found");
-      }
-
-      // Increment the coins
-      const newCoins = user.coin_balance + 1;
-
-      // Update the user with the new coin balance
       const { data, error } = await supabase
         .from("userschema")
-        .update({ coin_balance: newCoins })
-        .eq("id", userId)
-        .single();
+        .update({ coin_balance: args.coin_balance })
+        .eq("id", args.id)
+        .select()
+        .single(); // Fetch a single updated record
 
       if (error) {
-        throw new Error("Error updating coins");
+        console.error("Error updating coin balance:", error.message);
+        throw new Error(error.message);
+      }
+
+      if (!data) {
+        throw new Error("User not found or update failed");
       }
 
       return data;
     },
-
-    // updateCoinBalance: async (
-    //   parent: any,
-    //   args: { id: number; amount: number }
-    // ) => {
-    //   console.log(
-    //     "updateCoinBalance called with id:",
-    //     args.id,
-    //     "amount:",
-    //     args.amount
-    //   );
-    //   const { data, error } = await supabase
-    //     .from("users")
-    //     .update({ coin_balance: args.amount })
-    //     .eq("id", args.id)
-    //     .select()
-    //     .single();
-
-    //   if (error) {
-    //     console.error("Error updating coin balance:", error.message);
-    //     throw new Error(error.message);
-    //   }
-    //   return data;
-    // },
   },
 };
 
