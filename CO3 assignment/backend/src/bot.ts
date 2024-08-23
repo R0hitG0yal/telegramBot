@@ -38,14 +38,36 @@ bot.onText(/\/start/, async (msg) => {
     res.json({ userId });
   });
 
-  // Insert or update user in Supabase
-  const { data, error } = await supabase
+  // Check if the user exists in the database
+  const { data: existingUser, error: fetchError } = await supabase
     .from("userschema")
-    .upsert({ id: userId, coin_balance: 0 });
+    .select("id, coin_balance")
+    .eq("id", userId)
+    .single(); // Fetch a single user
 
-  if (error) {
-    console.error("Error creating user:", error.message); // Log the error for debugging
-    return bot.sendMessage(chatId, "Error creating user. Please try again.");
+  if (fetchError) {
+    console.error("Error fetching user:", fetchError.message);
+    return bot.sendMessage(
+      chatId,
+      "Error fetching user data. Please try again."
+    );
+  }
+
+  // If user does not exist, create a new user with coin_balance set to 0
+  if (!existingUser) {
+    const { error: insertError } = await supabase
+      .from("userschema")
+      .insert({ id: userId, coin_balance: 0 });
+
+    if (insertError) {
+      console.error("Error creating user:", insertError.message);
+      return bot.sendMessage(chatId, "Error creating user. Please try again.");
+    }
+  } else {
+    // User exists, you can retrieve their coin_balance if needed
+    console.log(
+      `User already exists with coin_balance: ${existingUser.coin_balance}`
+    );
   }
 
   const webAppUrl = "https://telegram-bot-seven-chi.vercel.app/";
