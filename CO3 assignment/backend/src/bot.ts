@@ -1,6 +1,7 @@
 import express from "express";
 import TelegramBot from "node-telegram-bot-api";
 import { createClient } from "@supabase/supabase-js";
+import cors from "cors";
 
 // Initialize the Telegram bot with your bot token
 const bot = new TelegramBot("7531375147:AAGOkLHfAMeHNnXCR-UC8fR4YlJ_7bgNOro", {
@@ -16,6 +17,9 @@ const supabase = createClient(
 // Initialize Express app
 const app = express();
 const port = 3000; // Your desired port
+
+// Use CORS middleware
+app.use(cors());
 
 // Middleware to parse JSON request bodies
 app.use(express.json());

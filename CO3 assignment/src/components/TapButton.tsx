@@ -26,7 +26,6 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
   const { data, loading, error, refetch } = useQuery(GET_USER, {
     variables: { userId },
   });
-  const [updateCoinBalance] = useMutation(UPDATE_COIN_BALANCE);
 
   const [coins, setCoins] = useState(0);
   const [level, setLevel] = useState("");
@@ -36,6 +35,8 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
       setCoins(data.getUser.coin_balance);
     }
   }, [data]);
+
+  const [updateCoinBalance] = useMutation(UPDATE_COIN_BALANCE);
 
   useEffect(() => {
     const levelNames = [
@@ -92,8 +93,12 @@ const TapButton: React.FC<{ userId: number }> = ({ userId }) => {
   return (
     <>
       <div className="tap-container mx-auto rounded-lg">
-        <div className="text-4xl font-serif underline underline-offset-4 decoration-indigo-500">{level}</div>
-        <h1 className="mt-2 font-serif tracking-wider text-4xl mb-8">Coins:{coins}</h1>
+        <div className="text-4xl font-serif underline underline-offset-4 decoration-indigo-500">
+          {level}
+        </div>
+        <h1 className="mt-2 font-serif tracking-wider text-4xl mb-8">
+          Coins:{coins}
+        </h1>
         {/* <button className="tap-button" onClick={handleTap}>
           <CoinLogo />
         </button> */}
