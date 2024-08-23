@@ -31,7 +31,7 @@ bot.onText(/\/start/, async (msg) => {
   console.log(`id: ${userId}`);
 
   app.get("/api/user", (req, res) => {
-    res.send(userId);
+    res.json(userId);
   });
 
   // Insert or update user in Supabase

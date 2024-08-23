@@ -9,16 +9,15 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-
-
 const App: React.FC = () => {
-  const [userId, setUserId] = useState(1); // Replace with actual user ID from Telegram
+  const [userId, setUserId] = useState<number | null>(null); // Initialize userId as null
 
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/user");
-        setUserId(response.data.userId);
+        // Fetch the user ID from your API
+        const response = await axios.get("http://localhost:5000/api/user"); // Ensure this URL matches your Express server
+        setUserId(response.data.userId); // Assuming the response has a userId property
       } catch (error) {
         console.error("Error fetching user ID:", error);
       }
@@ -27,13 +26,16 @@ const App: React.FC = () => {
     fetchUserId();
   }, []);
 
+  // Show loading state until userId is fetched
+  if (userId === null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="w-full h-screen bg-gradient-to-br from-purple-900 to-black text-white p-4">
-      <div>
-        <ApolloProvider client={client}>
-          <TapButton userId={userId} />
-        </ApolloProvider>
-      </div>
+      <ApolloProvider client={client}>
+        <TapButton userId={userId} />
+      </ApolloProvider>
     </div>
   );
 };
