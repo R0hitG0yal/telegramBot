@@ -17,7 +17,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/user");
+        const response = await axios.get("http://localhost:5000/api/user");
         setUserId(response.data.userId);
       } catch (error) {
         console.error("Error fetching user ID:", error);
