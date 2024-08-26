@@ -5,7 +5,7 @@ import TapButton from "./components/TapButton";
 import axios from "axios";
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql", // Your GraphQL server URL
+  uri: "https://telegrambot-q0i0.onrender.com/graphql", // Your GraphQL server URL
   cache: new InMemoryCache(),
 });
 
@@ -16,7 +16,9 @@ const App: React.FC = () => {
     const fetchUserId = async () => {
       try {
         // Fetch the user ID from your API
-        const response = await axios.get("http://localhost:3000/api/user"); // Ensure this URL matches your Express server
+        const response = await axios.get(
+          "https://telegrambot-1-yyr8.onrender.com/api/user"
+        ); // Ensure this URL matches your Express server
         console.log(response.data.userId);
         setUserId(response.data.userId); // Assuming the response has a userId property
       } catch (error) {
