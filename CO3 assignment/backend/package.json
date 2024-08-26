@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/main.js",
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "bot": "ts-node-dev --respawn --transpile-only src/bot.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts"
   },
